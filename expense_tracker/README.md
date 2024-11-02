@@ -1,3 +1,3 @@
-# expense_tracker
+# Expense Tracker - WIP
 
-A new Flutter project.
+- A Full stack Flutter project backed with Firebase (ExpressJS temporarily)
