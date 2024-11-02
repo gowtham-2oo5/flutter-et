@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken"); // For generating tokens
 // Register a new user
 const registerUser = async (req, res) => {
   console.log("Request received");
-  const { username, email, password } = req.body; // Destructure username, email, and password from req.body
+  const { name, email, password } = req.body; // Destructure username, email, and password from req.body
 
   try {
     // Check if the user already exists
@@ -18,9 +18,9 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user instance
-    const user = new User({ username, email, password: hashedPassword });
+    const user = new User({ name, email, password: hashedPassword });
     await user.save(); // Save the new user to the database
-
+    console.log("User saved");
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -79,10 +79,26 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId); // Exclude password from the response
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    await user.deleteOne();
+    return res.status(200).json({ message: "User Deleted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Export the methods
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
   getAllUsers,
+  deleteUser,
 };

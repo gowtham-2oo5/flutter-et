@@ -3,10 +3,9 @@ const bcrypt = require("bcrypt"); // For password hashing
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    name: {
       type: String,
       required: true,
-      unique: true, // Ensure unique usernames
       trim: true,
     },
     email: {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/screens/home_screen.dart';
+import 'package:expense_tracker/services/ApiService.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -7,6 +8,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final ApiService _apiService = ApiService();
+
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   String _name = '';
@@ -14,7 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String _password = '';
   String _currency = 'USD';
 
-  List<String> _currencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD'];
+  final List<String> _currencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD'];
 
   @override
   Widget build(BuildContext context) {
@@ -246,19 +249,49 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Here you would typically send the sign-up data to your backend
-      print('Name: $_name, Email: $_email, Currency: $_currency');
-      // Navigate to the main app or show a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account created successfully!')),
-      );
-      // Navigate to the home screen after successful sign-up
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+
+      // Gather user data from the form fields
+      Map<String, dynamic> userData = {
+        'name': _name, // Assuming _name is the variable for username
+        'email': _email, // Assuming _email is the variable for email
+        'password':
+            _password, // Assuming _password is the variable for password
+        'currency':
+            _currency, // Assuming _currency is the variable for currency
+      };
+
+      try {
+        // Send the user data to your backend
+        var response = await _apiService.registerUser(userData);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Submitted DATA: ${userData['name']}')),
+        );
+
+        // Check the response status
+        if (response.statusCode == 200) {
+          // Handle successful registration
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Account created successfully!')),
+          );
+          // Navigate to the home screen after successful sign-up
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          // Handle error response from the server
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Registration failed: ${response.body}')),
+          );
+        }
+      } catch (e) {
+        // Handle any exceptions that occur during the HTTP request
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 }
