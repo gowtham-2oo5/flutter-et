@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:expense_tracker/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/screens/signup_screen.dart';
 import 'package:expense_tracker/services/ApiService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -9,10 +12,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _apiService = ApiService();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
+  final _apiService = ApiService();
   bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 48),
                 // Email Field
                 TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.email, color: Colors.blue[600]),
@@ -134,6 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                   ),
+                  controller: _passwordController,
                   obscureText: _obscurePassword,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -145,13 +159,41 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 24),
                 // Login Button
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // Perform login logic here
+                      final loginData = {
+                        'email': _emailController.text,
+                        'password': _passwordController.text,
+                      };
 
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => MainScreen()),
-                      );
+                      final response = await _apiService.loginUser(loginData);
+
+                      if (response.statusCode == 200) {
+                        print("Logged in user ra");
+                        final data = json.decode(response.body);
+                        print(data);
+                        final userId = data['user']['_id']!;
+
+                        // Save the userId to SharedPreferences
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('userId', userId);
+
+                        // Navigate to MainScreen
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Logged successfully!')),
+                        );
+                        // Navigate to the home screen after successful sign-up
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => MainScreen()),
+                        );
+                      } else {
+                        // Show error message if login fails
+                        final errorMessage =
+                            json.decode(response.body)['message'];
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(errorMessage)),
+                        );
+                      }
                     }
                   },
                   child: Padding(

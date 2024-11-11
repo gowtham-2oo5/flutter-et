@@ -1,5 +1,6 @@
+import 'package:expense_tracker/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/screens/home_screen.dart';
+import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/ApiService.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -271,14 +272,14 @@ class _SignUpPageState extends State<SignUpPage> {
         );
 
         // Check the response status
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
           // Handle successful registration
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Account created successfully!')),
           );
           // Navigate to the home screen after successful sign-up
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => MainScreen()),
           );
         } else {
           // Handle error response from the server

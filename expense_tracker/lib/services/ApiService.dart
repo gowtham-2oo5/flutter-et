@@ -5,7 +5,7 @@ import '../models/expense_model.dart';
 
 class ApiService {
   // Define the base URL
-  static const String baseUrl = 'http://10.121.84.142:3000/api/v1';
+  static const String baseUrl = 'http://127.0.0.1:3000/api/v1';
 
   // User-related endpoints
 

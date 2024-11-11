@@ -62,7 +62,8 @@ class BudgetScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(16),
@@ -110,7 +111,8 @@ class BudgetScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryBudgetItem(String category, double total, double spent, Color color) {
+  Widget _buildCategoryBudgetItem(
+      String category, double total, double spent, Color color) {
     final percentage = (spent / total * 100).round();
     return Container(
       margin: const EdgeInsets.only(bottom: 16),

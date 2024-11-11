@@ -10,13 +10,13 @@ const expRouter = require("./routes/ExpensesRoutes");
 const userRouter = require("./routes/UserRoutes");
 
 mongoose
-.connect(process.env.MONGO_URL)
-.then(() => {
-  console.log("Connected to DB Successfully");
-})
-.catch((err) => {
-  console.error(err);
-});
+  .connect(process.env.MONGO_URL)
+  .then(() => {
+    console.log("Connected to DB Successfully");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 
 const app = express();
 app.use(cors());
