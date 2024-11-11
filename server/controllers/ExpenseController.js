@@ -4,6 +4,8 @@ const User = require("../models/UserModel"); // Assuming you have a User model
 // Create a new expense
 const createExpense = async (req, res) => {
   const { userId, category, amount, description, date } = req.body;
+  console.log("Creating expense for user", userId);
+  console.log("Category:", category);
 
   try {
     // Check if user exists

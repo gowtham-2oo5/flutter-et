@@ -1,13 +1,22 @@
 import 'package:expense_tracker/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:expense_tracker/notifiers/expense_notifier.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      ChangeNotifierProvider(
+        create: (context) => ExpenseNotifier(),
+        child: MyApp(),
+      ),
+    );
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Expense Tracker Onboarding',
+      title: 'Expense Tracker',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -19,6 +28,8 @@ class MyApp extends StatelessWidget {
 }
 
 class OnboardingPage extends StatefulWidget {
+  const OnboardingPage({super.key});
+
   @override
   _OnboardingPageState createState() => _OnboardingPageState();
 }
@@ -85,37 +96,37 @@ class _OnboardingPageState extends State<OnboardingPage> {
                           MaterialPageRoute(builder: (context) => LoginPage()));
                       print("Get Started");
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                    ),
                     child: Text(
                       "Get Started",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
                   )
                 : TextButton(
                     onPressed: () {
                       _pageController.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn,
                       );
                     },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
                     child: Text(
                       "Next",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
                   ),
           )
@@ -126,7 +137,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget buildPageContent(OnboardingItem item) {
     return Padding(
-      padding: EdgeInsets.all(40.0),
+      padding: const EdgeInsets.all(40.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -134,15 +145,15 @@ class _OnboardingPageState extends State<OnboardingPage> {
             item.image,
             height: 300.0,
           ),
-          SizedBox(height: 50.0),
+          const SizedBox(height: 50.0),
           Text(
             item.title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 20.0),
+          const SizedBox(height: 20.0),
           Text(
             item.description,
             textAlign: TextAlign.center,
@@ -166,13 +177,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _indicator(bool isActive) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      duration: const Duration(milliseconds: 150),
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       height: 8.0,
       width: isActive ? 24.0 : 16.0,
       decoration: BoxDecoration(
         color: isActive ? Colors.blue : Colors.grey[300],
-        borderRadius: BorderRadius.all(Radius.circular(12)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
     );
   }

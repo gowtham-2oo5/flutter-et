@@ -1,7 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../notifiers/expense_notifier.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class BudgetScreen extends StatelessWidget {
+class BudgetScreen extends StatefulWidget {
   const BudgetScreen({Key? key}) : super(key: key);
+
+  @override
+  _BudgetScreenState createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends State<BudgetScreen> {
+  String userId = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('userId') ?? '';
+    if (userId.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Provider.of<ExpenseNotifier>(context, listen: false)
+            .fetchTotalExpenses(userId);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,18 +36,29 @@ class BudgetScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Budget'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildBudgetOverview(),
-          const SizedBox(height: 24),
-          _buildCategoryBudgets(),
-        ],
+      body: Consumer<ExpenseNotifier>(
+        builder: (context, expenseNotifier, child) {
+          if (expenseNotifier.expenses.isEmpty) {
+            return const Center(child: Text('No expenses found'));
+          }
+          return ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildBudgetOverview(expenseNotifier),
+              const SizedBox(height: 24),
+              _buildCategoryBudgets(expenseNotifier),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildBudgetOverview() {
+  Widget _buildBudgetOverview(ExpenseNotifier expenseNotifier) {
+    double totalBudget = expenseNotifier.monthlyBudget;
+    double totalSpent = expenseNotifier.totalExpenses;
+    double percentageUsed = (totalSpent / totalBudget).clamp(0.0, 1.0);
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -53,9 +91,9 @@ class BudgetScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '\$3,000.00',
-                style: TextStyle(
+              Text(
+                '\$${totalBudget.toStringAsFixed(2)}',
+                style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -68,9 +106,9 @@ class BudgetScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Text(
-                  '70% used',
-                  style: TextStyle(
+                child: Text(
+                  '${(percentageUsed * 100).toStringAsFixed(0)}% used',
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -81,7 +119,7 @@ class BudgetScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           LinearProgressIndicator(
-            value: 0.7,
+            value: percentageUsed,
             backgroundColor: Colors.white.withOpacity(0.3),
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
           ),
@@ -90,7 +128,22 @@ class BudgetScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryBudgets() {
+  Widget _buildCategoryBudgets(ExpenseNotifier expenseNotifier) {
+    Map<String, double> categoryTotals = {};
+    for (var expense in expenseNotifier.expenses) {
+      categoryTotals[expense.category] =
+          (categoryTotals[expense.category] ?? 0) + expense.amount;
+    }
+
+    List<Widget> categoryWidgets = categoryTotals.entries.map((entry) {
+      String category = entry.key;
+      double spent = entry.value;
+      double total = expenseNotifier.monthlyBudget /
+          categoryTotals.length; // Assuming equal distribution
+      return _buildCategoryBudgetItem(
+          category, total, spent, _getCategoryColor(category));
+    }).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -103,17 +156,14 @@ class BudgetScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _buildCategoryBudgetItem('Food & Dining', 500, 350, Colors.orange),
-        _buildCategoryBudgetItem('Transportation', 300, 200, Colors.blue),
-        _buildCategoryBudgetItem('Shopping', 400, 300, Colors.purple),
-        _buildCategoryBudgetItem('Utilities', 200, 180, Colors.green),
+        ...categoryWidgets,
       ],
     );
   }
 
   Widget _buildCategoryBudgetItem(
       String category, double total, double spent, Color color) {
-    final percentage = (spent / total * 100).round();
+    final percentage = (spent / total * 100).clamp(0.0, 100.0).round();
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -154,7 +204,7 @@ class BudgetScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           LinearProgressIndicator(
-            value: spent / total,
+            value: (spent / total).clamp(0.0, 1.0),
             backgroundColor: color.withOpacity(0.2),
             valueColor: AlwaysStoppedAnimation<Color>(color),
           ),
@@ -169,5 +219,20 @@ class BudgetScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color _getCategoryColor(String category) {
+    switch (category.toLowerCase()) {
+      case 'food':
+        return Colors.orange;
+      case 'transport':
+        return Colors.blue;
+      case 'shopping':
+        return Colors.purple;
+      case 'utilities':
+        return Colors.green;
+      default:
+        return Colors.grey;
+    }
   }
 }

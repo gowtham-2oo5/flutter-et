@@ -4,6 +4,8 @@ import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/ApiService.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -34,13 +36,13 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Text(
                   'Create Account',
                   style: TextStyle(
@@ -51,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
                   'Start tracking your expenses today!',
                   style: TextStyle(
@@ -61,7 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 48),
+                const SizedBox(height: 48),
                 _buildTextField(
                   label: 'Full Name',
                   prefixIcon: Icons.person,
@@ -73,7 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   onSaved: (value) => _name = value!,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildTextField(
                   label: 'Email',
                   prefixIcon: Icons.email,
@@ -90,7 +92,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   },
                   onSaved: (value) => _email = value!,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildTextField(
                   label: 'Password',
                   prefixIcon: Icons.lock,
@@ -119,7 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: _currency,
                   decoration: InputDecoration(
@@ -142,7 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     filled: true,
                     fillColor: Colors.grey[100],
                     contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   items: _currencies.map((String currency) {
                     return DropdownMenuItem<String>(
@@ -156,9 +158,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     });
                   },
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 ElevatedButton(
                   onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[600],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                  ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Text(
@@ -169,15 +178,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Colors.white),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[600],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 3,
-                  ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -240,7 +242,7 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         filled: true,
         fillColor: Colors.grey[100],
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         suffixIcon: suffixIcon,
       ),
       keyboardType: keyboardType,
@@ -275,11 +277,11 @@ class _SignUpPageState extends State<SignUpPage> {
         if (response.statusCode == 201) {
           // Handle successful registration
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Account created successfully!')),
+            const SnackBar(content: Text('Account created successfully!')),
           );
           // Navigate to the home screen after successful sign-up
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         } else {
           // Handle error response from the server

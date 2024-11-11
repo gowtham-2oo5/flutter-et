@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../notifiers/expense_notifier.dart';
 import '../models/expense_model.dart';
-import '../services/ApiService.dart';
+import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -10,127 +12,178 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final ApiService _apiService = ApiService();
-  List<Expense> _transactions = [];
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchTransactions();
-  }
-
-  Future<void> _fetchTransactions() async {
-    try {
-      // Replace with actual userId
-      String userId = "67250d8364ecffea119752c3";
-      List<Expense> transactions = await _apiService.getUserExpenses(userId);
-      setState(() {
-        _transactions = transactions;
-        _isLoading = false;
-      });
-    } catch (e) {
-      // Handle errors here, such as showing an error message
-      setState(() {
-        _isLoading = false;
-      });
-      print("Error fetching transactions: $e");
-    }
-  }
+  String _selectedFilter = 'All';
+  List<String> _filterOptions = ['All', 'This Week', 'This Month', 'This Year'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaction History'),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String result) {
+              setState(() {
+                _selectedFilter = result;
+              });
+            },
+            itemBuilder: (BuildContext context) => _filterOptions
+                .map((String option) => PopupMenuItem<String>(
+                      value: option,
+                      child: Text(option),
+                    ))
+                .toList(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Text(_selectedFilter),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _transactions.isEmpty
+      body: Consumer<ExpenseNotifier>(
+        builder: (context, expenseNotifier, child) {
+          List<Expense> filteredTransactions =
+              _filterTransactions(expenseNotifier.expenses);
+
+          return filteredTransactions.isEmpty
               ? const Center(child: Text("No transactions found"))
               : ListView.builder(
-                  itemCount: _transactions.length,
+                  itemCount: filteredTransactions.length,
                   itemBuilder: (context, index) {
-                    final transaction = _transactions[index];
+                    final transaction = filteredTransactions[index];
                     return _buildTransactionItem(
-                      icon: Icons.shopping_bag,
+                      context,
+                      icon: _getCategoryIcon(transaction.category),
                       title: transaction.category,
                       amount: '\$${transaction.amount.toStringAsFixed(2)}',
                       date: _formatDate(transaction.date),
                     );
                   },
-                ),
+                );
+        },
+      ),
     );
+  }
+
+  List<Expense> _filterTransactions(List<Expense> transactions) {
+    final now = DateTime.now();
+    switch (_selectedFilter) {
+      case 'This Week':
+        return transactions
+            .where((t) => t.date.isAfter(now.subtract(const Duration(days: 7))))
+            .toList();
+      case 'This Month':
+        return transactions
+            .where((t) => t.date.month == now.month && t.date.year == now.year)
+            .toList();
+      case 'This Year':
+        return transactions.where((t) => t.date.year == now.year).toList();
+      default:
+        return transactions;
+    }
+  }
+
+  Widget _buildTransactionItem(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required String amount,
+      required String date}) {
+    return Dismissible(
+      key: UniqueKey(),
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      direction: DismissDirection.endToStart,
+      onDismissed: (direction) {
+        // Delete the transaction
+        // You need to implement this in your ExpenseNotifier
+        // Provider.of<ExpenseNotifier>(context, listen: false).deleteExpense(transaction.id);
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 3,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: Theme.of(context).primaryColor),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    date,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              amount,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.error,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category.toLowerCase()) {
+      case 'grocery':
+        return Icons.shopping_basket;
+      case 'transport':
+        return Icons.directions_car;
+      case 'entertainment':
+        return Icons.movie;
+      case 'dining':
+        return Icons.restaurant;
+      default:
+        return Icons.attach_money;
+    }
   }
 
   String _formatDate(DateTime date) {
-    // You can customize the date format as needed
-    return "${date.day}/${date.month}/${date.year}";
-  }
-
-  Widget _buildTransactionItem({
-    required IconData icon,
-    required String title,
-    required String amount,
-    required String date,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: Colors.blue[700]),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  date,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            amount,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.red[700],
-            ),
-          ),
-        ],
-      ),
-    );
+    return DateFormat('MMM d, y').format(date);
   }
 }

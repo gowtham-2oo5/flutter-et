@@ -7,6 +7,8 @@ import 'package:expense_tracker/services/ApiService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -32,13 +34,13 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 48),
+                const SizedBox(height: 48),
                 // Logo/Avatar
                 Center(
                   child: Container(
@@ -56,18 +58,18 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.blue.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 10,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.account_balance_wallet,
                       size: 60,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                SizedBox(height: 32),
+                const SizedBox(height: 32),
                 // Welcome Text
                 Text(
                   'Welcome back!',
@@ -79,7 +81,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   'Log in to manage your expenses',
                   style: TextStyle(
@@ -89,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 48),
+                const SizedBox(height: 48),
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -116,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 // Password Field
                 TextFormField(
                   decoration: InputDecoration(
@@ -156,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Login Button
                 ElevatedButton(
                   onPressed: () async {
@@ -178,13 +180,10 @@ class _LoginPageState extends State<LoginPage> {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.setString('userId', userId);
 
-                        // Navigate to MainScreen
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Logged successfully!')),
-                        );
                         // Navigate to the home screen after successful sign-up
                         Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => MainScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const MainScreen()),
                         );
                       } else {
                         // Show error message if login fails
@@ -196,6 +195,13 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                  ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Text(
@@ -206,21 +212,14 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.white),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 3,
-                  ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Or divider
                 Row(
                   children: [
                     Expanded(child: Divider(color: Colors.grey[400])),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
                         'or',
                         style: TextStyle(
@@ -233,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(child: Divider(color: Colors.grey[400])),
                   ],
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Social Login Buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -245,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                       icon: Icons.facebook,
                       backgroundColor: Colors.blue[900]!,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     _socialLoginButton(
                       onPressed: () {
                         // Implement Google login
@@ -253,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
                       icon: Icons.g_mobiledata,
                       backgroundColor: Colors.red,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     _socialLoginButton(
                       onPressed: () {
                         // Implement Apple login
@@ -263,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 // Sign Up Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -314,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
             color: backgroundColor.withOpacity(0.4),
             spreadRadius: 1,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -323,8 +322,8 @@ class _LoginPageState extends State<LoginPage> {
         icon: Icon(icon),
         color: Colors.white,
         iconSize: 24,
-        padding: EdgeInsets.all(12),
-        constraints: BoxConstraints(minWidth: 60, minHeight: 60),
+        padding: const EdgeInsets.all(12),
+        constraints: const BoxConstraints(minWidth: 60, minHeight: 60),
       ),
     );
   }

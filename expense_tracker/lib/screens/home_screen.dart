@@ -1,12 +1,15 @@
+import 'package:expense_tracker/services/ApiService.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
+// import 'package:fl_chart/fl_chart.dart';
 import '../widgets/total_expenses_card.dart';
 import '../widgets/quick_add_expense.dart';
 import '../widgets/spending_chart.dart';
 import '../widgets/recent_transactions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:expense_tracker/services/ApiService.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,10 @@ class HomeScreen extends StatelessWidget {
             icon: const CircleAvatar(
               backgroundImage: AssetImage("assets/dp.png"),
             ),
-            onPressed: () {
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              String? userId = prefs.getString('userId');
+              print(userId);
               // TODO: Navigate to profile screen
             },
           ),
@@ -26,10 +32,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children: [
               TotalExpensesCard(),
               SizedBox(height: 24),
               QuickAddExpense(),

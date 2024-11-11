@@ -85,14 +85,19 @@ class ApiService {
   }
 
   // Create a new expense
-  Future<http.Response> createExpense(Map<String, dynamic> expenseData) async {
+  Future<Expense> createExpense(Map<String, dynamic> expenseData) async {
     final url = Uri.parse('$baseUrl/exp/create-expense');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: json.encode(expenseData),
     );
-    return response;
+
+    if (response.statusCode == 201) {
+      return Expense.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to create expense');
+    }
   }
 
   // Delete an expense by ID

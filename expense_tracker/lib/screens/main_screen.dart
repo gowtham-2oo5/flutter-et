@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'home_screen.dart';
 import 'history_screen.dart';
 import 'budget_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
+import '../widgets/add_expense_modal.dart';
+import '../notifiers/expense_notifier.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -26,7 +29,6 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: SafeArea(
-        // Wrap in SafeArea to avoid overflow
         child: CustomBottomNavBar(
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -38,10 +40,14 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement add expense functionality
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => AddExpenseModal(),
+          );
         },
+        backgroundColor: Theme.of(context).primaryColor,
         child: const Icon(Icons.add),
-        backgroundColor: Colors.blue[700],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
