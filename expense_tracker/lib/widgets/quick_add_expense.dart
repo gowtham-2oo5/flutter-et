@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../notifiers/expense_notifier.dart';
 
 class QuickAddExpense extends StatelessWidget {
-  QuickAddExpense({super.key});
+  const QuickAddExpense({super.key});
 
   Future<void> _openAddExpenseModal(
       BuildContext context, String category) async {

@@ -32,17 +32,17 @@ class HomeScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TotalExpensesCard(),
-              SizedBox(height: 24),
+              const TotalExpensesCard(),
+              const SizedBox(height: 24),
               QuickAddExpense(),
-              SizedBox(height: 24),
-              SpendingChart(),
-              SizedBox(height: 24),
-              RecentTransactions(),
+              const SizedBox(height: 24),
+              const SpendingChart(),
+              const SizedBox(height: 24),
+              const RecentTransactions(),
             ],
           ),
         ),

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class AddExpenseModal extends StatefulWidget {
-  const AddExpenseModal({Key? key}) : super(key: key);
+  const AddExpenseModal({super.key});
 
   @override
   _AddExpenseModalState createState() => _AddExpenseModalState();
@@ -86,10 +86,10 @@ class _AddExpenseModalState extends State<AddExpenseModal> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _submitForm,
-                child: const Text('Add Expense'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                 ),
+                child: const Text('Add Expense'),
               ),
               const SizedBox(height: 20),
             ],

@@ -168,7 +168,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     elevation: 3,
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Text(
                       'Sign Up',

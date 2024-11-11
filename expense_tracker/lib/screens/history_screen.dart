@@ -5,7 +5,7 @@ import '../models/expense_model.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({Key? key}) : super(key: key);
+  const HistoryScreen({super.key});
 
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
@@ -13,7 +13,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   String _selectedFilter = 'All';
-  List<String> _filterOptions = ['All', 'This Week', 'This Month', 'This Year'];
+  final List<String> _filterOptions = ['All', 'This Week', 'This Month', 'This Year'];
 
   @override
   Widget build(BuildContext context) {

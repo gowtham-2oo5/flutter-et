@@ -4,7 +4,7 @@ import '../notifiers/expense_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BudgetScreen extends StatefulWidget {
-  const BudgetScreen({Key? key}) : super(key: key);
+  const BudgetScreen({super.key});
 
   @override
   _BudgetScreenState createState() => _BudgetScreenState();

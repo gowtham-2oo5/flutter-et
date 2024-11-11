@@ -9,7 +9,7 @@ import '../widgets/add_expense_modal.dart';
 import '../notifiers/expense_notifier.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -43,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => AddExpenseModal(),
+            builder: (context) => const AddExpenseModal(),
           );
         },
         backgroundColor: Theme.of(context).primaryColor,

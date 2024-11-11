@@ -202,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     elevation: 3,
                   ),
-                  child: Padding(
+                  child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),
                     child: Text(
                       'Log In',
@@ -277,7 +277,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                          MaterialPageRoute(builder: (context) => const SignUpPage()),
                         );
                       },
                       child: Text(

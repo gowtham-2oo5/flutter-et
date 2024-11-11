@@ -5,7 +5,7 @@ import '../models/expense_model.dart';
 import '../notifiers/expense_notifier.dart';
 
 class SpendingChart extends StatelessWidget {
-  const SpendingChart({Key? key}) : super(key: key);
+  const SpendingChart({super.key});
 
   List<PieChartSectionData> _generateChartSections(List<Expense> expenses) {
     Map<String, double> categoryTotals = {};

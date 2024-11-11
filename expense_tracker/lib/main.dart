@@ -6,7 +6,7 @@ import 'package:expense_tracker/notifiers/expense_notifier.dart';
 void main() => runApp(
       ChangeNotifierProvider(
         create: (context) => ExpenseNotifier(),
-        child: MyApp(),
+        child: const MyApp(),
       ),
     );
 
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       debugShowCheckedModeBanner: false,
-      home: OnboardingPage(),
+      home: const OnboardingPage(),
     );
   }
 }
@@ -93,7 +93,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onPressed: () {
                       // Navigate to the main app
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                          MaterialPageRoute(builder: (context) => const LoginPage()));
                       print("Get Started");
                     },
                     style: ElevatedButton.styleFrom(
@@ -105,7 +105,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Get Started",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -123,7 +123,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 12),
                     ),
-                    child: Text(
+                    child: const Text(
                       "Next",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

@@ -5,7 +5,7 @@ import '../notifiers/expense_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TotalExpensesCard extends StatefulWidget {
-  const TotalExpensesCard({Key? key}) : super(key: key);
+  const TotalExpensesCard({super.key});
 
   @override
   _TotalExpensesCardState createState() => _TotalExpensesCardState();
