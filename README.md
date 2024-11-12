@@ -14,8 +14,7 @@ Expense Tracker is a full-stack Flutter application designed to help you manage 
 ## Demo
 
 Check out our demo video to see Expense Tracker in action:
-
-[![Expense Tracker Demo](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+    [![Watch the video](cover.png)](demo.mp4)
 
 ## Setup Instructions
 
