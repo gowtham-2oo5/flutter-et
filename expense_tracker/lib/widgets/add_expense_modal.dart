@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../notifiers/expense_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
 class AddExpenseModal extends StatefulWidget {
   const AddExpenseModal({super.key});
@@ -13,14 +12,15 @@ class AddExpenseModal extends StatefulWidget {
 
 class _AddExpenseModalState extends State<AddExpenseModal> {
   final _formKey = GlobalKey<FormState>();
-  String _category = 'Groceries';
+  String _category = 'Food';
   double _amount = 0;
   final List<String> _categories = [
-    'Groceries',
-    'Transport',
-    'Entertainment',
-    'Dining',
-    'Other'
+    "Food",
+    "Transport",
+    "Dining",
+    "Entertainment",
+    "Shopping",
+    "Others",
   ];
 
   @override

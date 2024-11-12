@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'home_screen.dart';
 import 'history_screen.dart';
 import 'budget_screen.dart';
 import 'profile_screen.dart';
 import '../widgets/custom_bottom_nav_bar.dart';
 import '../widgets/add_expense_modal.dart';
-import '../notifiers/expense_notifier.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

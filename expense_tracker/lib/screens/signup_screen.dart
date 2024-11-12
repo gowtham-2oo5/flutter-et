@@ -1,7 +1,6 @@
-import 'package:expense_tracker/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_tracker/main.dart';
 import 'package:expense_tracker/services/ApiService.dart';
+import 'package:expense_tracker/screens/login_screen.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -143,8 +142,8 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     filled: true,
                     fillColor: Colors.grey[100],
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
                   ),
                   items: _currencies.map((String currency) {
                     return DropdownMenuItem<String>(
@@ -242,7 +241,8 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         filled: true,
         fillColor: Colors.grey[100],
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         suffixIcon: suffixIcon,
       ),
       keyboardType: keyboardType,
@@ -281,7 +281,7 @@ class _SignUpPageState extends State<SignUpPage> {
           );
           // Navigate to the home screen after successful sign-up
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const MainScreen()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
           );
         } else {
           // Handle error response from the server

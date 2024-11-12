@@ -30,19 +30,19 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TotalExpensesCard(),
-              const SizedBox(height: 24),
+              TotalExpensesCard(),
+              SizedBox(height: 24),
               QuickAddExpense(),
-              const SizedBox(height: 24),
-              const SpendingChart(),
-              const SizedBox(height: 24),
-              const RecentTransactions(),
+              SizedBox(height: 24),
+              SpendingChart(),
+              SizedBox(height: 24),
+              RecentTransactions(),
             ],
           ),
         ),

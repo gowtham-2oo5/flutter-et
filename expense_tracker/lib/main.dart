@@ -92,8 +92,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ? ElevatedButton(
                     onPressed: () {
                       // Navigate to the main app
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const LoginPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const LoginPage()));
                       print("Get Started");
                     },
                     style: ElevatedButton.styleFrom(
